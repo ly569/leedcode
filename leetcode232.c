@@ -1,96 +1,97 @@
-typedef struct MyStack{
+typedef struct MyStack {
     int *data;
     int top;
 } MyStack;
 
-MyStack* myStackCreate(int maxSize) {
+MyStack *MyStackCreate(int size) {
     MyStack *s = (MyStack *)malloc(sizeof(MyStack));
-    s->data = (int *)malloc(sizeof(int) * maxSize);
+    s->data = (int *)malloc(sizeof(int) * size);
     s->top = -1;
     return s;
 }
 
-/** Push element x to the back of queue. */
-void myStackPush(MyStack* obj, int x) {
+void MyStackPush(MyStack *obj, int x) {
     obj->data[++(obj->top)] = x;
 }
 
-/** Removes the element from in front of queue and returns that element. */
-int myStackPop(MyStack* obj) {
+int MyStackPop(MyStack *obj) {
     return obj->data[(obj->top)--];
 }
 
-/** Get the front element. */
-int myStackTop(MyStack* obj) {
-    return obj->data[obj->top]; 
+int MyStackTop(MyStack *obj) {
+    return obj->data[obj->top];
 }
 
-/** Returns whether the queue is empty. */
-bool myStackEmpty(MyStack* obj) {
+int MyStackEmpty(MyStack *obj) {
     return obj->top == -1;
 }
 
-void myStackFree(MyStack* obj) {
+void MyStackFree(MyStack *obj) {
+    if (obj == NULL)
+        return;
     free(obj->data);
     free(obj);
+    return;
 }
 
-
-typedef struct MyQueue{
+typedef struct {
     MyStack *s1, *s2;
 } MyQueue;
 
 /** Initialize your data structure here. */
-MyQueue* myQueueCreate(int maxSize) {
+
+MyQueue *myQueueCreate() {
+    int size = 1024;
     MyQueue *q = (MyQueue *)malloc(sizeof(MyQueue));
-    q->s1 = myStackCreate(maxSize);
-    q->s2 = myStackCreate(maxSize);
+    q->s1 = MyStackCreate(size);
+    q->s2 = MyStackCreate(size);
     return q;
 }
 
 /** Push element x to the back of queue. */
-void myQueuePush(MyQueue* obj, int x) {
-    myStackPush(obj->s1, x);
+void myQueuePush(MyQueue *obj, int x) {
+    MyStackPush(obj->s1, x);
 }
 
 /** Removes the element from in front of queue and returns that element. */
-int myQueuePop(MyQueue* obj) {
-    if (myStackEmpty(obj->s2)) {
-        while (!myStackEmpty(obj->s1)) {
-            myStackPush(obj->s2, myStackPop(obj->s1));
+int myQueuePop(MyQueue *obj) {
+    if (MyStackEmpty(obj->s2)) {
+        while (!MyStackEmpty(obj->s1)) {
+            MyStackPush(obj->s2, MyStackPop(obj->s1));
         }
     }
-    return myStackPop(obj->s2);
+    return MyStackPop(obj->s2);
 }
 
 /** Get the front element. */
-int myQueuePeek(MyQueue* obj) {
-    if (myStackEmpty(obj->s2)) {
-        while (!myStackEmpty(obj->s1)) {
-            myStackPush(obj->s2, myStackPop(obj->s1));
+int myQueuePeek(MyQueue *obj) {
+    if (MyStackEmpty(obj->s2)) {
+        while (!MyStackEmpty(obj->s1)) {
+            MyStackPush(obj->s2, MyStackPop(obj->s1));
         }
     }
-    return myStackTop(obj->s2);
+    return MyStackTop(obj->s2);
 }
 
 /** Returns whether the queue is empty. */
-bool myQueueEmpty(MyQueue* obj) {
-    return myStackEmpty(obj->s1) && myStackEmpty(obj->s2); 
+bool myQueueEmpty(MyQueue *obj) {
+    return MyStackEmpty(obj->s1) && MyStackEmpty(obj->s2);
 }
 
-void myQueueFree(MyQueue* obj) {
-    myStackFree(obj->s1);
-    myStackFree(obj->s2);
+void myQueueFree(MyQueue *obj) {
+    if (obj == NULL) return;
+    MyStackFree(obj->s1);
+    MyStackFree(obj->s2);
     free(obj);
-    return ;
+    return;
 }
 
 /**
  * Your MyQueue struct will be instantiated and called as such:
- * struct MyQueue* obj = myQueueCreate(maxSize);
+ * MyQueue* obj = myQueueCreate();
  * myQueuePush(obj, x);
  * int param_2 = myQueuePop(obj);
  * int param_3 = myQueuePeek(obj);
  * bool param_4 = myQueueEmpty(obj);
  * myQueueFree(obj);
- */
+*/

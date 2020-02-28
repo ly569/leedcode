@@ -5,7 +5,9 @@
  *     struct ListNode *next;
  * };
  */
-struct ListNode* deleteDuplicates(struct ListNode* head) {
+
+
+struct ListNode* deleteDuplicates(struct ListNode* head){
     struct ListNode *p = head, *q;
     while (p && p->next) {
         if (p->val - p->next->val) {
